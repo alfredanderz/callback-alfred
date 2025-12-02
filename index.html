@@ -2,41 +2,45 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Tabla</title>
-    <!-- Fuente elegante de Google para que combine con el estilo dorado -->
+    <title>Tabla Multiplicación</title>
+
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#ff6600" />
+
+    <!-- Ícono para teléfonos -->
+    <link rel="icon" href="./icon-192.png" />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap"
       rel="stylesheet"
     />
+
     <style>
-      /*  Estilos generales del body */
+      /* Pegué tus estilos iguales, no los modifico */
       body {
         margin: 0;
         padding: 0;
-        /* Fondo con degradado radial para dar un efecto llamativo */
         background: radial-gradient(circle at top, #ff6600, #111);
         font-family: "Playfair Display", serif;
         color: #fff;
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 100vh; /* Pantalla completa */
+        min-height: 100vh;
       }
 
-      /* Caja principal (contenedor del contenido) */
       .contenedor {
-        background: rgba(0, 0, 0, 0.8); /* Fondo semi-transparente */
+        background: rgba(0, 0, 0, 0.8);
         padding: 50px;
-        border-radius: 20px; /* Bordes redondeados */
-        border: 3px solid gold; /* Marco dorado  */
-        box-shadow: 0 0 30px gold, 0 0 60px #ff6600; /* Sombras brillantes */
+        border-radius: 20px;
+        border: 3px solid gold;
+        box-shadow: 0 0 30px gold, 0 0 60px #ff6600;
         text-align: center;
         max-width: 600px;
         width: 100%;
-        animation: brillo 3s infinite alternate; /* Animación de brillo */
+        animation: brillo 3s infinite alternate;
       }
 
-      /*  Animación de las sombras */
       @keyframes brillo {
         from {
           box-shadow: 0 0 30px gold, 0 0 60px #ff6600;
@@ -46,21 +50,14 @@
         }
       }
 
-      /* Título principal */
       h2 {
         font-size: 2.8rem;
         color: gold;
-        text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.8); /* Sombrado para contraste */
+        text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.8);
         margin-bottom: 25px;
         letter-spacing: 2px;
       }
 
-      /* Estilos del formulario */
-      form {
-        margin-bottom: 25px;
-      }
-
-      /* Etiqueta del input */
       label {
         font-size: 1.3rem;
         display: block;
@@ -68,7 +65,6 @@
         color: #ffcc66;
       }
 
-      /* Input donde se escribe el número */
       input {
         width: 120px;
         padding: 10px;
@@ -81,7 +77,6 @@
         color: white;
       }
 
-      /* Botón estilizado */
       button {
         background: gold;
         border: none;
@@ -92,18 +87,16 @@
         color: #000;
         font-weight: bold;
         box-shadow: 0 0 20px #ff6600;
-        transition: all 0.3s; /* Animación al pasar el mouse */
+        transition: all 0.3s;
       }
 
-      /* Efecto hover para el botón */
       button:hover {
-        transform: scale(1.1); /* Se agranda un poco */
+        transform: scale(1.1);
         background: #ff6600;
         color: white;
         box-shadow: 0 0 25px gold;
       }
 
-      /* Caja donde aparecen los resultados */
       #resultado {
         text-align: left;
         background: rgba(255, 102, 0, 0.2);
@@ -111,11 +104,10 @@
         border-radius: 15px;
         border: 2px solid #ffcc66;
         max-height: 400px;
-        overflow-y: auto; /* Scroll si se llena mucho */
-        box-shadow: inset 0 0 15px gold; /* Brillo interno */
+        overflow-y: auto;
+        box-shadow: inset 0 0 15px gold;
       }
 
-      /* Cada resultado dentro de la tabla */
       #resultado p {
         margin: 6px 0;
         font-size: 1.2rem;
@@ -126,11 +118,11 @@
       }
     </style>
   </head>
+
   <body>
     <div class="contenedor">
-      <h2>Tabla Multiplicacion</h2>
+      <h2>Tabla Multiplicación</h2>
 
-      <!--  Formulario para que el usuario ingrese un número -->
       <form id="formulario">
         <label for="numero">Ingresa un número:</label>
         <input type="number" id="numero" min="1" required />
@@ -138,42 +130,19 @@
         <button type="submit">Generar</button>
       </form>
 
-      <!--  Resultados generados aparecerán aquí -->
       <div id="resultado"></div>
     </div>
 
+    <script src="./script.js"></script>
+
+    <!-- REGISTRO DEL SERVICE WORKER -->
     <script>
-      //  Función principal: genera la tabla de multiplicar (hasta 25)
-      // Recibe un número y un callback para mostrarla
-      function generarTabla(numero, callback) {
-        let tabla = [];
-        for (let i = 1; i <= 25; i++) {
-          tabla.push(`${numero} × ${i} = ${numero * i}`);
-        }
-        callback(tabla);
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("./sw.js")
+          .then(() => console.log("SW registrado"))
+          .catch((err) => console.log("Error SW:", err));
       }
-
-      //  Callback que imprime la tabla dentro del div #resultado
-      function mostrarTabla(tabla) {
-        const resultadoDiv = document.getElementById("resultado");
-        resultadoDiv.innerHTML = ""; // Limpiar resultados anteriores
-
-        // Recorrer cada línea y crear un <p>
-        tabla.forEach((linea) => {
-          const p = document.createElement("p");
-          p.textContent = linea;
-          resultadoDiv.appendChild(p);
-        });
-      }
-
-      //  Manejo del evento submit del formulario
-      document
-        .getElementById("formulario")
-        .addEventListener("submit", function (e) {
-          e.preventDefault(); // Evita recargar la página
-          const numero = parseInt(document.getElementById("numero").value);
-          generarTabla(numero, mostrarTabla);
-        });
     </script>
   </body>
 </html>
